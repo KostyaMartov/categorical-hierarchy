@@ -1,0 +1,9 @@
+source,target,relation_type,strength,timestamp
+stress,shopping,triggers,0.8,1700000000.0
+shopping,stress,increases,0.6,1700000000.0
+stress,meditation,avoids,0.4,1700000000.0
+meditation,stress,reduces,0.9,1700000000.0
+shopping,exercise,leads_to,0.3,1700086400.0
+exercise,shopping,increases,0.2,1700086400.0
+work,exercise,prevents,0.7,1700086400.0
+stress,work,increases,0.5,1700086400.0
