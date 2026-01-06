@@ -1,20 +1,9 @@
 [build-system]
-requires = ["maturin>=1.0,<2.0"]
+requires = ["maturin>=1.7"]
 build-backend = "maturin"
 
 [project]
 name = "categorical-core"
 version = "0.1.0"
-description = "Когнитивный анализатор на основе теории категорий"
 requires-python = ">=3.9"
-dependencies = [
-    "pandas>=1.3.0",
-    "streamlit>=1.30.0",
-    "pyvis>=0.3.0",
-    "networkx>=2.8.0",
-    "ollama>=0.1.0",
-]
-
-[tool.maturin]
-features = ["pyo3/extension-module"]
-module-name = "categorical_core"
+dependencies = ["streamlit"]
