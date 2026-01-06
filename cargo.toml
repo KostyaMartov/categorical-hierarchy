@@ -1,0 +1,35 @@
+[package]
+name = "categorical_core"
+version = "0.1.0"
+edition = "2021"
+description = "Когнитивный анализатор на основе теории категорий: иерархия, естественные преобразования, эндофункторы, монады"
+license = "MIT"
+repository = "https://github.com/KostyaMartov/categorical-hierarchy"
+keywords = ["category-theory", "cognitive-science", "rust", "python", "ai"]
+categories = ["science", "visualization", "algorithms"]
+
+[lib]
+name = "categorical_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Основа: Python-биндинги
+pyo3 = { version = "0.20", features = ["extension-module"] }
+
+# Сериализация
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Параллелизм
+rayon = "1.7"
+
+# Кластеризация для автоматического построения иерархии
+ndarray = "0.15"
+kmeans = "0.7"
+
+[dev-dependencies]
+# Для будущих тестов (например, естественных преобразований)
+# serde_test = "1.0"
+
+[features]
+default = ["pyo3/extension-module"]
