@@ -1,0 +1,6 @@
+id,type,properties.intensity,properties.cost,properties.duration
+stress,state,0.8,0.0,0.0
+shopping,activity,0.2,100.0,1.5
+meditation,activity,0.1,0.0,20.0
+work,context,0.3,0.0,8.0
+exercise,activity,0.0,0.0,30.0
