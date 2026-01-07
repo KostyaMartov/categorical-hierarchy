@@ -1,0 +1,4 @@
+source,target,morphism_type,strength
+user1,task1,performs,0.75
+user1,reward1,seeks,0.85
+task1,reward1,yields,0.65
