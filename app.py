@@ -120,7 +120,7 @@ if st.button("🚀 Построить категорию и проанализи
         except Exception as e:
             st.warning(f"⚠️ Ollama недоступен: {str(e)}")
         
-        # Визуализация
+# ========== СТАТИЧНАЯ ВИЗУАЛИЗАЦИЯ (без физики) ==========
 net = Network(
     height="700px",
     width="100%",
@@ -130,54 +130,46 @@ net = Network(
     font_color="black"
 )
 
-# Настройка физики: отключаем "липкость"
-net.set_options("""
-var options = {
+# Полностью отключаем физику
+net.set_options('''
+{
   "physics": {
-    "enabled": true,
-    "stabilization": {"iterations": 100},
-    "barnesHut": {
-      "gravitationalConstant": -10000,
-      "centralGravity": 0.0,
-      "springLength": 250,
-      "springConstant": 0.001,
-      "damping": 0.1,
-      "avoidOverlap": 1
-    }
+    "enabled": false
   },
   "interaction": {
     "dragNodes": true,
     "dragView": true,
-    "hover": true,
-    "tooltipDelay": 200
+    "zoomView": true,
+    "hover": true
   },
   "layout": {
-    "improvedLayout": true
+    "hierarchical": {
+      "enabled": true,
+      "direction": "LR",
+      "sortMethod": "directed"
+    }
   }
 }
+''')
 
-// Отключаем физику после стабилизации — узлы остаются на месте!
-network.on("stabilizationIterationsDone", function () {
-  network.setOptions({ physics: false });
-});
-""")
-
-# Добавляем узлы с размером по criticality
 for _, row in st.session_state.objects_df.iterrows():
-    size = 10 + 20 * float(row.get("properties.criticality", 0.5))
+    size = 15 + 15 * float(row.get("properties.criticality", 0.5))
+    color = "#97c2fc"
+    if row["object_type"] == "team":
+        color = "#f4c28f"
+    elif row["object_type"] == "personnel":
+        color = "#a2d2a4"
+    elif row["object_type"] == "location":
+        color = "#e0e0e0"
     net.add_node(
         row["id"],
-        label=f"{row['id']}\n({row['object_type']})",
+        label=f"{row['id']}\\n({row['object_type']})",
         size=size,
-        color="#97c2fc" if row["object_type"] == "equipment" else 
-               "#f4c28f" if row["object_type"] == "team" else
-               "#a2d2a4" if row["object_type"] == "personnel" else
-               "#e0e0e0"
+        color=color
     )
 
-# Добавляем рёбра с толщиной по strength
 for _, row in st.session_state.morphisms_df.iterrows():
-    width = 1 + 5 * float(row["strength"])
+    width = 1 + 4 * float(row["strength"])
     net.add_edge(
         row["source"],
         row["target"],
@@ -187,7 +179,6 @@ for _, row in st.session_state.morphisms_df.iterrows():
         arrows="to"
     )
 
-# Сохраняем и отображаем
 with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
     net.save_graph(f.name)
     with open(f.name) as g:
