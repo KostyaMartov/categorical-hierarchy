@@ -120,40 +120,36 @@ if st.button("🚀 Построить категорию и проанализи
         except Exception as e:
             st.warning(f"⚠️ Ollama недоступен: {str(e)}")
         
-# ========== СТАТИЧНАЯ ВИЗУАЛИЗАЦИЯ (без физики) ==========
+# ========== ИСПРАВЛЕННАЯ ВИЗУАЛИЗАЦИЯ ==========
 net = Network(
     height="700px",
     width="100%",
     directed=True,
-    notebook=False,
     bgcolor="#ffffff",
     font_color="black"
 )
 
-# Полностью отключаем физику
-net.set_options('''
-{
-  "physics": {
-    "enabled": false
-  },
-  "interaction": {
-    "dragNodes": true,
-    "dragView": true,
-    "zoomView": true,
-    "hover": true
-  },
-  "layout": {
-    "hierarchical": {
-      "enabled": true,
-      "direction": "LR",
-      "sortMethod": "directed"
+# Передаём ОПЦИИ как СЛОВАРЬ, а не строку!
+options = {
+    "physics": False,
+    "layout": {
+        "hierarchical": {
+            "enabled": True,
+            "direction": "LR",
+            "sortMethod": "directed",
+            "levelSeparation": 250
+        }
+    },
+    "interaction": {
+        "dragNodes": True,
+        "zoomView": True,
+        "hover": True
     }
-  }
 }
-''')
+net.set_options(options)
 
 for _, row in st.session_state.objects_df.iterrows():
-    size = 15 + 15 * float(row.get("properties.criticality", 0.5))
+    size = 20
     color = "#97c2fc"
     if row["object_type"] == "team":
         color = "#f4c28f"
@@ -169,14 +165,11 @@ for _, row in st.session_state.objects_df.iterrows():
     )
 
 for _, row in st.session_state.morphisms_df.iterrows():
-    width = 1 + 4 * float(row["strength"])
     net.add_edge(
         row["source"],
         row["target"],
         label=row["morphism_type"],
-        title=f"Strength: {row['strength']}",
-        width=width,
-        arrows="to"
+        width=2
     )
 
 with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
