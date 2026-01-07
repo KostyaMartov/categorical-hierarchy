@@ -137,20 +137,29 @@ var options = {
     "enabled": true,
     "stabilization": {"iterations": 100},
     "barnesHut": {
-      "gravitationalConstant": -10000,  // слабее притяжение
-      "centralGravity": 0.1,
-      "springLength": 200,             // больше расстояние между узлами
-      "springConstant": 0.01,          // слабее "резинка"
-      "damping": 0.5,
+      "gravitationalConstant": -10000,
+      "centralGravity": 0.0,
+      "springLength": 250,
+      "springConstant": 0.001,
+      "damping": 0.1,
       "avoidOverlap": 1
     }
   },
   "interaction": {
-    "dragNodes": true,                // можно тащить узлы
+    "dragNodes": true,
+    "dragView": true,
     "hover": true,
     "tooltipDelay": 200
+  },
+  "layout": {
+    "improvedLayout": true
   }
 }
+
+// Отключаем физику после стабилизации — узлы остаются на месте!
+network.on("stabilizationIterationsDone", function () {
+  network.setOptions({ physics: false });
+});
 """)
 
 # Добавляем узлы с размером по criticality
