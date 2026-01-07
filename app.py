@@ -121,21 +121,69 @@ if st.button("🚀 Построить категорию и проанализи
             st.warning(f"⚠️ Ollama недоступен: {str(e)}")
         
         # Визуализация
-        net = Network(height="600px", width="100%", directed=True)
-        for _, row in objects_df.iterrows():
-            net.add_node(row["id"], label=f"{row['id']}\n({row['object_type']})")
-        for _, row in morphisms_df.iterrows():
-            net.add_edge(row["source"], row["target"], label=row["morphism_type"], title=str(row["strength"]))
-        
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
-            net.save_graph(f.name)
-            with open(f.name, "r") as g:
-                html = g.read()
-        st.components.v1.html(html, height=600)
-        
-    except Exception as e:
-        st.error(f"❌ Ошибка анализа: {e}")
-        st.code(str(e))
+net = Network(
+    height="700px",
+    width="100%",
+    directed=True,
+    notebook=False,
+    bgcolor="#ffffff",
+    font_color="black"
+)
+
+# Настройка физики: отключаем "липкость"
+net.set_options("""
+var options = {
+  "physics": {
+    "enabled": true,
+    "stabilization": {"iterations": 100},
+    "barnesHut": {
+      "gravitationalConstant": -10000,  // слабее притяжение
+      "centralGravity": 0.1,
+      "springLength": 200,             // больше расстояние между узлами
+      "springConstant": 0.01,          // слабее "резинка"
+      "damping": 0.5,
+      "avoidOverlap": 1
+    }
+  },
+  "interaction": {
+    "dragNodes": true,                // можно тащить узлы
+    "hover": true,
+    "tooltipDelay": 200
+  }
+}
+""")
+
+# Добавляем узлы с размером по criticality
+for _, row in st.session_state.objects_df.iterrows():
+    size = 10 + 20 * float(row.get("properties.criticality", 0.5))
+    net.add_node(
+        row["id"],
+        label=f"{row['id']}\n({row['object_type']})",
+        size=size,
+        color="#97c2fc" if row["object_type"] == "equipment" else 
+               "#f4c28f" if row["object_type"] == "team" else
+               "#a2d2a4" if row["object_type"] == "personnel" else
+               "#e0e0e0"
+    )
+
+# Добавляем рёбра с толщиной по strength
+for _, row in st.session_state.morphisms_df.iterrows():
+    width = 1 + 5 * float(row["strength"])
+    net.add_edge(
+        row["source"],
+        row["target"],
+        label=row["morphism_type"],
+        title=f"Strength: {row['strength']}",
+        width=width,
+        arrows="to"
+    )
+
+# Сохраняем и отображаем
+with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
+    net.save_graph(f.name)
+    with open(f.name) as g:
+        html = g.read()
+st.components.v1.html(html, height=700)
 
 # ========== Инструкция ==========
 st.markdown("---")
