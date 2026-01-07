@@ -9,3 +9,4 @@ op_ex,team,0.95,1.0,0.9
 drivers,team,0.9,1.0,0.85
 mech_heavy,personnel,0.85,0.95,0.8
 mech_trucks,personnel,0.8,0.95,0.75
+dump,location,1.0,1.0,0.5
