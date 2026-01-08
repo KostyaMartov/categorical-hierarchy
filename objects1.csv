@@ -2,6 +2,4 @@ id,object_type,properties.productivity,layer
 bulldozer,equipment,0.6,day_1
 excavator,equipment,0.9,day_1
 truck_1,equipment,0.85,day_1
-bulldozer,equipment,0.75,day_2
-excavator,equipment,0.85,day_2
-truck_1,equipment,0.9,day_2
+dump,location,1.0,day_1
