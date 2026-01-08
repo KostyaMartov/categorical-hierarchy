@@ -1,4 +1,7 @@
 source,target,morphism_type,strength,layer
 bulldozer,excavator,supplies,0.6,day_1
 excavator,truck_1,loads,0.95,day_1
-truck_1,dump,delivers,0.9,day_1  # ← всё ведёт в dump, но из dump — никуда
+truck_1,dump,delivers,0.9,day_1
+bulldozer,excavator,supplies,0.8,day_2
+excavator,truck_1,loads,0.9,day_2
+truck_1,dump,delivers,0.95,day_2
