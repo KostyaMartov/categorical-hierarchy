@@ -119,7 +119,26 @@ if st.button("🚀 Построить категорию и проанализи
                 st.warning("⚠️ Не удалось сгенерировать имя (Ollama не отвечает)")
         except Exception as e:
             st.warning(f"⚠️ Ollama недоступен: {str(e)}")
-        
+      # После анализа динамики
+st.write("🎯 Анализ глобальной структуры:")
+
+initial = cat.initial_object()
+terminal = cat.terminal_object()
+
+if initial:
+    st.write(f"🟢 Начальный объект: {initial}")
+else:
+    st.write("🟢 Начальный объект: не определён")
+
+if terminal:
+    st.write(f"🔴 Терминальный объект: {terminal}")
+else:
+    st.write("🔴 Терминальный объект: не определён")
+
+if cat.has_initial_and_terminal():
+    st.success("✅ Система имеет чёткое начало и конец — структура монадоподобна")
+else:
+    st.info("💡 Система не имеет полной структуры начального/терминального объекта")  
 # ========== ИСПРАВЛЕННАЯ ВИЗУАЛИЗАЦИЯ ==========
 net = Network(
     height="700px",
